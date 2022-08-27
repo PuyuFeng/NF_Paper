@@ -1,0 +1,28 @@
+library(ggplot2)
+
+p<-ggplot()+
+  stat_summary(data=aa, aes(x=var, y=mse_scale,fill=status),geom = "boxplot",
+               fun.data = function(x) setNames(quantile(x, c(0.1, 0.25, 0.5, 0.75, 0.9)), c("ymin", "lower", "middle", "upper", "ymax")),
+               position=position_dodge(width=0.5),width=0.5,lwd=0.5)+
+  #facet_wrap(~state,ncol = 3)+
+  scale_fill_manual(values = c('#3288bd','#fd8d3c'))+
+  scale_y_continuous(name = 'Importance (%)',limits = c(0,100),breaks = seq(0,100,20),expand = c(0.01,0.01))+
+  theme_bw()+
+  theme(panel.grid = element_blank(),
+        legend.title = element_blank(),
+        legend.position = c(0.83,0.90),
+        legend.background=element_blank(),
+        axis.text = element_text(colour="black"),#angle = 30, hjust = 1,
+        axis.title.x = element_blank(),
+        text = element_text(size=11),
+        #strip.text.x = element_text(size = 23,color='black'),
+        #strip.background = element_rect(fill="gray92"),
+        axis.line = element_line(colour = "black",size = 0.06),
+        panel.border = element_rect(colour = "black",size=0.5))
+
+
+ggsave(filename = "figure5.pdf", 
+       plot = p, 
+       device = cairo_pdf,
+       width = 3.46,
+       height = 3.7)
