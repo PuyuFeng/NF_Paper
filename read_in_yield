@@ -1,0 +1,30 @@
+apsim_files<-list.files('D:/apsim_result',full.names = T)
+
+#apsim_result<-NULL
+
+i=apsim_files[1]
+
+for (i in apsim_files) {
+  
+  a<-read.table(i,skip = 4)
+  
+  a<-subset(a,a$V2%in%c(1889:2020))
+  
+  a<-a[,c(2,11)]
+  
+  colnames(a)<-c('year','yield')
+  
+  a$grid<-substr(basename(i),1,nchar(basename(i))-4)
+  
+  apsim_result<-rbind(apsim_result,a)
+  
+  print(i)
+  
+}
+
+apsim_result$long<-sapply(apsim_result$grid,function(x){strsplit(x,'_')[[1]][1]})
+
+apsim_result$lat<-sapply(apsim_result$grid,function(x){strsplit(x,'_')[[1]][2]})
+
+apsim_result$long<-as.numeric(apsim_result$long)
+apsim_result$lat<-as.numeric(apsim_result$lat)
