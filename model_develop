@@ -1,0 +1,100 @@
+for(i in unique(yield_indices2$grid)){
+  
+  input<-subset(yield_indices2,grid==i);input<-subset(input,input$yield!=0)
+  input_1<-subset(input,year%in%c(1889:1921))
+  input_2<-subset(input,year%in%c(1922:1954))
+  input_3<-subset(input,year%in%c(1955:1987))
+  input_4<-subset(input,year%in%c(1988:2020))
+  
+  input_1<-input_1[,c(2,6,8,10)]#6:8
+  input_2<-input_2[,c(2,6,8,10)]#6:8
+  input_3<-input_3[,c(2,6,8,10)]#6:8
+  input_4<-input_4[,c(2,6,8,10)]#6:8
+  ######################################1
+  rf_model<-rfsrc(yield~.,
+                  data=input_1, 
+                  importance = TRUE) ###
+  impor_result<-rf_model$importance
+  impor_result<-as.data.frame(impor_result)
+  
+  impor_result2<-find.interaction(rf_model, method = "vimp", nrep = 3)
+  impor_result2<-as.data.frame(impor_result2)
+  
+  impor_result[4:6,1]<-impor_result2[,3]
+  rownames(impor_result)[4:6]<-rownames(impor_result2)
+  impor_result$difference<-c(rep(0,3),impor_result2[,5])
+  impor_result$var<-rownames(impor_result)
+  colnames(impor_result)[1]<-'mse'
+  impor_result$mse_scale<-(impor_result$mse-min(impor_result$mse))/(max(impor_result$mse)-min(impor_result$mse))*100
+  
+  write.csv(impor_result,
+            paste0('D:/rf_result_4parts_new1207/',i,'_',1,'.csv'),
+            row.names = F)
+  ######################################2
+  rf_model<-rfsrc(yield~.,
+                  data=input_2, 
+                  importance = TRUE) ###
+  
+  impor_result<-rf_model$importance
+  impor_result<-as.data.frame(impor_result)
+  
+  impor_result2<-find.interaction(rf_model, method = "vimp", nrep = 3)
+  impor_result2<-as.data.frame(impor_result2)
+  
+  impor_result[4:6,1]<-impor_result2[,3]
+  rownames(impor_result)[4:6]<-rownames(impor_result2)
+  impor_result$difference<-c(rep(0,3),impor_result2[,5])
+  impor_result$var<-rownames(impor_result)
+  colnames(impor_result)[1]<-'mse'
+  impor_result$mse_scale<-(impor_result$mse-min(impor_result$mse))/(max(impor_result$mse)-min(impor_result$mse))*100
+  
+  write.csv(impor_result,
+            paste0('D:/rf_result_4parts_new1207/',i,'_',2,'.csv'),
+            row.names = F)
+  ######################################3
+  rf_model<-rfsrc(yield~.,
+                  data=input_3, 
+                  importance = TRUE) ###
+  
+  impor_result<-rf_model$importance
+  impor_result<-as.data.frame(impor_result)
+  
+  impor_result2<-find.interaction(rf_model, method = "vimp", nrep = 3)
+  impor_result2<-as.data.frame(impor_result2)
+  
+  impor_result[4:6,1]<-impor_result2[,3]
+  rownames(impor_result)[4:6]<-rownames(impor_result2)
+  impor_result$difference<-c(rep(0,3),impor_result2[,5])
+  impor_result$var<-rownames(impor_result)
+  colnames(impor_result)[1]<-'mse'
+  impor_result$mse_scale<-(impor_result$mse-min(impor_result$mse))/(max(impor_result$mse)-min(impor_result$mse))*100
+  
+  write.csv(impor_result,
+            paste0('D:/rf_result_4parts_new1207/',i,'_',3,'.csv'),
+            row.names = F)
+  ######################################4
+  rf_model<-rfsrc(yield~.,
+                  data=input_4, 
+                  importance = TRUE) ###
+  
+  impor_result<-rf_model$importance
+  impor_result<-as.data.frame(impor_result)
+  
+  impor_result2<-find.interaction(rf_model, method = "vimp", nrep = 3)
+  impor_result2<-as.data.frame(impor_result2)
+  
+  impor_result[4:6,1]<-impor_result2[,3]
+  rownames(impor_result)[4:6]<-rownames(impor_result2)
+  impor_result$difference<-c(rep(0,3),impor_result2[,5])
+  impor_result$var<-rownames(impor_result)
+  colnames(impor_result)[1]<-'mse'
+  impor_result$mse_scale<-(impor_result$mse-min(impor_result$mse))/(max(impor_result$mse)-min(impor_result$mse))*100
+  
+  write.csv(impor_result,
+            paste0('D:/rf_result_4parts_new1207/',i,'_',4,'.csv'),
+            row.names = F)
+  
+  ###########################################
+  
+  print(i)
+}
